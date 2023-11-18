@@ -1,6 +1,6 @@
 # Grpc with Spring Boot ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 
-In this project, we will be developing a gRPC Spring Boot application with both server and client components. The primary objective is to implement CRUD (Create, Read, Update, Delete) operations for managing student records. The application will enable functionalities such as adding new students, deleting existing records, updating student information, and retrieving a list of students
+In this project, we will focus on the client-side implementation of a gRPC Spring Boot application. Our primary goal is to facilitate CRUD (Create, Read, Update, Delete) operations for managing student records. This involves functionalities such as adding new students, deleting existing records, updating student information, and efficiently retrieving and displaying a list of students using React programming and streams.
 We will also leverage React programming to efficiently retrieve and display a list of students using streams.
 
 
@@ -397,8 +397,8 @@ grpc.client.service.negotiation-type=plaintext
 ![get_student_streams.png](assets%2Fget_student_streams.png)
 
 ## References
-https://yidongnan.github.io/grpc-spring-boot-starter/en/server/getting-started.html
 
+https://yidongnan.github.io/grpc-spring-boot-starter/en/server/getting-started.html
 
 ## Authors
 
