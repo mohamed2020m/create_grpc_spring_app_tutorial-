@@ -695,6 +695,141 @@ grpc.client.service.negotiation-type=plaintext
 
 ![get_student_streams.png](assets%2Fget_student_streams.png)
 
+## Security
+
+In this section, we'll enhance security by implementing an additional layer to secure the communication between the client and the server.
+
+### Updating Server side
+
+#### Installing OpenSSL
+
+Firstly, ensure that OpenSSL is installed on your system. For Mac or Linux users, OpenSSL is typically included by default. For Windows users, if it's not installed, you can add it using the following PowerShell command.
+
+```powershell
+choco install openssl.light
+```
+
+#### Generate keys and certificates
+
+Generate CA's private key 
+
+```
+openssl genrsa -des3 -out ca.key.pem 2048
+```
+
+Create CA's self-signed certificate
+
+```
+openssl req -x509 -new -nodes -key ca.key.pem -sha256 -days 365 -out localhost.cert.pem
+```
+
+Create private key for server
+
+```
+openssl genrsa -out localhost.key 2048
+```
+
+Create certificate signing request (CSR)
+
+```
+openssl req -new -key localhost.key -out localhost.csr
+```
+
+Use CA's private key to sign web server's CSR and get back the signed certificate
+```
+openssl x509 -req -in localhost.csr -CA localhost.cert.pem -CAkey ca.key.pem -CAcreateserial -out localhost.crt -days 365
+```
+
+Convert server private key in PKCS8 standard(gRPc expects)
+
+```
+openssl pkcs8 -topk8 -nocrypt -in localhost.key -out localhost.pem
+```
+
+#### Adding private key and certificate to the server
+
+Create a folder `certificates` outside your `src` directory. Copy/paste the private key `localhost.pem` and `localhost.crt` to the folder.
+
+#### Creating an Interceptor Class 
+
+```java
+@GrpcGlobalServerInterceptor
+public class AuthInterceptor implements ServerInterceptor {
+
+    @Override
+    public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> serverCall, Metadata metadata,
+                                                                 ServerCallHandler<ReqT, RespT> serverCallHandler) {
+        System.out.println("Sever interceptor " + serverCall.getMethodDescriptor());
+
+        Metadata.Key<String> apiKeyMetadata = Metadata.Key.of("grpc-api-key",
+                Metadata.ASCII_STRING_MARSHALLER);
+        String apiKey = metadata.get(apiKeyMetadata);
+        System.out.println("grpc-api-key from client " + apiKey);
+
+        if (Objects.nonNull(apiKey) && apiKey.equals("secret")) {
+            return serverCallHandler.startCall(serverCall, metadata);
+        } else {
+            Status status = Status.UNAUTHENTICATED.withDescription("Invalid api-key");
+            serverCall.close(status, metadata);
+        }
+        return new ServerCall.Listener<>() {
+        };
+    }
+}
+
+```
+
+#### Updating the properties file
+
+Update the negotiation to `tls` instead of `plaintext`
+
+```properties
+grpc.client.service.negotiation-type=tls
+```
+
+At the end of your `application.properties` add these two lines
+
+```properties
+grpc.server.security.certificate-chain=file:certs\\localhost.crt
+grpc.server.security.private-key=file:certs\\localhost.pem
+```
+
+### Updating Client side
+
+#### Adding the certificate to the Client
+
+Create a folder `certificates` outside your `src` directory. Copy/paste `localhost.cert.pem` to the folder.
+
+#### Creting an Interceptor Class 
+
+```java
+@GrpcGlobalClientInterceptor
+public class AuthInterceptor implements ClientInterceptor {
+
+    @Override
+    public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(MethodDescriptor<ReqT, RespT> methodDescriptor,
+            CallOptions callOptions, Channel channel) {
+        System.out.println("client interceptor " + methodDescriptor.getFullMethodName());
+        return new ForwardingClientCall.SimpleForwardingClientCall<>(channel.newCall(methodDescriptor, callOptions)) {
+            @Override
+            public void start(Listener<RespT> responseListener, Metadata headers) {
+                headers.put(Metadata.Key.of("grpc-api-key", Metadata.ASCII_STRING_MARSHALLER), "secret");
+                super.start(responseListener, headers);
+            }
+        };
+    }
+}
+```
+
+#### Updating the properties file
+
+At the end of your `application.properties` add these two lines
+
+```properties
+grpc.client.service.negotiation-type=tls
+grpc.client.service.security.trust-cert-collection=file:C:\\Users\\HP\\Desktop\\grpc-springboot-students\\grpc-springboot-students\\gRPC_Client\\certs\\localhost.cert.pem
+```
+
 ## References
 
 https://yidongnan.github.io/grpc-spring-boot-starter/en/server/getting-started.html
