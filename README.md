@@ -1,8 +1,45 @@
 # Grpc with Spring Boot ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 
 ## Table of Content
-- (Server Setup)[https://github.com/mohamed2020m/create_grpc_spring_app_tutorial-#server-setup]
-- (Server Setup)[https://github.com/mohamed2020m/create_grpc_spring_app_tutorial-#server-setup]
+
+* [Description](#description)
+  * [Server Setup](#server-setup)
+    + [Create a spring boot project](#create-a-spring-boot-project)
+    + [Add maven dependencies](#add-maven-dependencies)
+    + [Creating the gRPC-Service Definitions](#creating-the-grpc-service-definitions)
+    + [Create a student jpa entity](#create-a-student-jpa-entity)
+    + [Mapping Grpc Student with Jpa Student](#mapping-grpc-student-with-jpa-student)
+    + [Implementing the Service](#implementing-the-service)
+    + [Config the server](#config-the-server)
+  * [Client Setup](#client-setup)
+      - [Create a spring boot project](#create-a-spring-boot-project-1)
+      - [Add maven dependencies](#add-maven-dependencies-1)
+      - [Generate stubs](#generate-stubs)
+      - [Create a dto](#create-a-dto)
+      - [Create a student client service](#create-a-student-client-service)
+      - [Create a student controller](#create-a-student-controller)
+      - [Config the app](#config-the-app)
+      - [Test With postman](#test-with-postman)
+        * [Create a Student](#create-a-student)
+        * [List all Students](#list-all-students)
+        * [List a Student](#list-a-student)
+        * [Update a Student](#update-a-student)
+        * [Delete a Student](#delete-a-student)
+        * [Retrieve a list of students using streams.](#retrieve-a-list-of-students-using-streams)
+  * [Security](#security)
+    + [Updating Server side](#updating-server-side)
+      - [Installing OpenSSL](#installing-openssl)
+      - [Generate keys and certificates](#generate-keys-and-certificates)
+      - [Adding private key and certificate to the server](#adding-private-key-and-certificate-to-the-server)
+      - [Creating an Interceptor Class](#creating-an-interceptor-class)
+      - [Updating the properties file](#updating-the-properties-file)
+    + [Updating Client side](#updating-client-side)
+      - [Adding the certificate to the Client](#adding-the-certificate-to-the-client)
+      - [Creting an Interceptor Class](#creting-an-interceptor-class)
+      - [Updating the properties file](#updating-the-properties-file-1)
+  * [References](#references)
+  * [Authors](#authors)
+
 
 ## Description
 
