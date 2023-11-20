@@ -827,7 +827,7 @@ At the end of your `application.properties` add these two lines
 
 ```properties
 grpc.client.service.negotiation-type=tls
-grpc.client.service.security.trust-cert-collection=file:C:\\Users\\HP\\Desktop\\grpc-springboot-students\\grpc-springboot-students\\gRPC_Client\\certs\\localhost.cert.pem
+grpc.client.service.security.trust-cert-collection=file:<your_path>/localhost.cert.pem // make sure to update <your_path> with your path to the localhost.cert.pem
 ```
 
 ## References
@@ -837,3 +837,4 @@ https://yidongnan.github.io/grpc-spring-boot-starter/en/server/getting-started.h
 ## Authors
 
 - [Leeuw](https://github.com/mohamed2020m)
+- [A00N](https://github.com/Ay0ubN0uri)
