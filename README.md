@@ -296,7 +296,23 @@ public class GrpcStudentServiceIml extends StudentServiceGrpc.StudentServiceImpl
 }
 ```
 
-That’s all there is to that. Now you can start your spring-boot application and start sending requests to your grpc-service.
+### Config the server
+
+Add the following propeties to `application.properties`
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/grpc_student?createDatabaseIfNotExist=true
+spring.jpa.hibernate.ddl-auto=create
+spring.datasource.username=root
+spring.datasource.password=
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.highlight_sql=true
+grpc.server.security.enabled=true
+```
+
+That’s all. Now you can start your spring-boot application and start sending requests to your grpc-service.
 
 By default, the grpc-server will be started on port `9090` using `PLAINTEXT` mode.
 You can test that your application is working as expected by using this [BloomRPC](https://github.com/bloomrpc/bloomrpc/releases) :
