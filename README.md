@@ -839,15 +839,10 @@ public class AuthInterceptor implements ServerInterceptor {
 
 #### Updating the properties file
 
-Update the negotiation to `tls` instead of `plaintext`
-
-```properties
-grpc.client.service.negotiation-type=tls
-```
-
 At the end of your `application.properties` add these two lines
 
 ```properties
+grpc.server.security.enabled=true
 grpc.server.security.certificate-chain=file:certs\\localhost.crt
 grpc.server.security.private-key=file:certs\\localhost.pem
 ```
