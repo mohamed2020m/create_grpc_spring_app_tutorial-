@@ -352,7 +352,6 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.properties.hibernate.highlight_sql=true
-grpc.server.security.enabled=true
 ```
 
 That’s all. Now you can start your spring-boot application and start sending requests to your grpc-service.
